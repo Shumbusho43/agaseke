@@ -33,3 +33,24 @@ exports.addFunds = async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 }
+//get user savings
+exports.getUserSavings = async (req, res) => {
+    // #swagger.tags = ['Saving']
+  try {
+    const savings = await Saving.find({ userId: req.user.id });
+    res.json(savings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+exports.getSavingById = async (req, res) => {
+    // #swagger.tags = ['Saving']
+  try {
+    const saving = await Saving.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!saving) return res.status(404).json({ error: "Saving not found" });
+    res.json(saving);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
