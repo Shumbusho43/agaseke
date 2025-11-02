@@ -60,3 +60,26 @@ exports.approveWithdrawal = async (req, res) => {
   }
   res.json({ message: "Withdrawal approved and processed" });
 };
+exports.getUserWithdrawals = async (req, res) => {
+        // #swagger.tags = ['Withdrawal']
+  try {
+    const withdrawals = await Withdrawal.find({ userId: req.user.id });
+    res.json(withdrawals);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+exports.getPendingForCoSigner = async (req, res) => {
+        // #swagger.tags = ['Withdrawal']
+  try {
+    // Find all users for whom this co-signer is assigned
+    const users = await User.find({ coSignerEmail: req.user.email });
+    const userIds = users.map(u => u._id);
+
+    // Find pending withdrawals for those users
+    const withdrawals = await Withdrawal.find({ userId: { $in: userIds }, status: "pending" });
+    res.json(withdrawals);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
