@@ -26,6 +26,9 @@ exports.addFunds = async (req, res) => {
   try {
     const { amount } = req.body
     const saving = await Saving.findOne({ userId: req.user.id })
+    if (!saving) {
+      return res.status(404).json({ error: 'No saving goal found. Create a saving goal first.' })
+    }
     saving.currentAmount += amount
     await saving.save()
     res.json(saving)

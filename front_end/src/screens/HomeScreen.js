@@ -165,6 +165,19 @@ const HomeScreen = () => {
               onTransfer={() => navigation.navigate("Transfer")}
               onGoals={() => navigation.navigate("Goals")}
             />
+            {/* Temporary button for co-signer access during testing */}
+            <Pressable
+              onPress={() => navigation.navigate('CoSignerPending')}
+              style={{
+                marginTop: 12,
+                padding: 12,
+                backgroundColor: colors.primary,
+                borderRadius: 12,
+                alignItems: 'center',
+              }}
+            >
+              <Text style={{ color: '#fff', fontWeight: '700' }}>Pending Approvals</Text>
+            </Pressable>
           </Section>
         </>
       )}

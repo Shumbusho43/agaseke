@@ -23,6 +23,7 @@ import DownloadInfoScreen from "./src/screens/DownloadInfoScreen";
 import SignupScreen from "./src/screens/SignupScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import GetStartedScreen from "./src/screens/GetStartedScreen";
+import CoSignerPendingScreen from "./src/screens/CoSignerPendingScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -151,6 +152,11 @@ const AppFlow = () => (
       name="DownloadInfo"
       component={DownloadInfoScreen}
       options={{ title: "Download AGASEKE" }}
+    />
+    <Stack.Screen
+      name="CoSignerPending"
+      component={CoSignerPendingScreen}
+      options={{ title: "Pending Approvals" }}
     />
   </Stack.Navigator>
 );

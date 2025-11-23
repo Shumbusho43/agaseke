@@ -5,7 +5,10 @@ const bcrypt = require('bcryptjs')
 exports.register = async (req, res) => {
   // #swagger.tags = ['Auth']
   try {
-    const { name, email, password, coSignerEmail } = req.body
+    let { name, email, password, coSignerEmail } = req.body
+    // normalize emails to avoid matching issues (trim + lowercase)
+    email = String(email || "").trim().toLowerCase();
+    coSignerEmail = String(coSignerEmail || "").trim().toLowerCase();
     //check if user exists
     const existingUser = await User.findOne({ email })
     if (existingUser)
@@ -21,14 +24,16 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   // #swagger.tags = ['Auth']
   try {
-    const { email, password } = req.body
+    let { email, password } = req.body
+    // normalize email for lookup
+    email = String(email || "").trim().toLowerCase();
     const user = await User.findOne({ email })
     if (!user) return res.status(404).json({ error: 'User not found' })
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' })
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: '7d'
     })
     res.json({ token })
