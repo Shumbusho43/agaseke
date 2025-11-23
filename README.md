@@ -37,31 +37,7 @@ A modern digital savings application that helps users track and achieve their fi
 
 ### Installation
 
-1. Clone the repository
-```bash
-git clone https://github.com/Shumbusho43/agaseke.git
-cd agaseke
-```
-
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Start the application
-```bash
-expo start
-```
-
-## Project Structure
-
-- `/front_end` - React Native mobile application
-- `/backend` - API server (if applicable)
-- Documentation files for architecture, deployment, and technical specifications
-
-## Contributing
-
-Please feel free to contribute to this project by submitting issues or pull requests to the [GitHub repository](https://github.com/Shumbusho43/agaseke).
+Please visit SETUP_GUIDE.md file for the whole process
 
 ## License
 
