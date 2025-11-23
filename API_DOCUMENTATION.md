@@ -580,3 +580,6 @@ Currently using v1 (implicit). Future versions should follow semantic versioning
 - Fund addition functionality
 - Withdrawal request and approval system
 - Co-signer authorization workflow
+
+
+-----

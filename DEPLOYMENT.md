@@ -1023,3 +1023,5 @@ Performance.mark('app-start');
 Performance.mark('app-ready');
 Performance.measure('app-startup', 'app-start', 'app-ready');
 ```
+
+------
