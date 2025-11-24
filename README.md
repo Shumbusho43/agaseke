@@ -5,6 +5,7 @@ A modern digital savings application that helps users track and achieve their fi
 ## Repository
 
 **GitHub Repository:** [https://github.com/Shumbusho43/agaseke](https://github.com/Shumbusho43/agaseke)
+**Demo video:** [https://youtu.be/zvAvbUQONLk](https://youtu.be/zvAvbUQONLk)
 
 ## Features
 
