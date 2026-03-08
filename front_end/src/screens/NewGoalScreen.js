@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, Pressable } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, Pressable, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Screen from '@components/Screen';
 import Section from '@components/Section';
 import { useThemeMode } from '@theme/ThemeContext';
@@ -9,14 +10,39 @@ import api, { handleApiError } from '@services/api';
 const NewGoalScreen = () => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
-  const [date, setDate] = useState('');
+  const [displayAmount, setDisplayAmount] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const { colors } = useThemeMode();
   const navigation = useNavigation();
   const route = useRoute();
   const onSuccess = route.params?.onSuccess;
 
+  const formatCurrency = (value) => {
+    const numericValue = value.replace(/[^0-9]/g, '');
+    if (!numericValue) return '';
+    return Number(numericValue).toLocaleString('en-US');
+  };
+
+  const handleAmountChange = (text) => {
+    const numericValue = text.replace(/[^0-9]/g, '');
+    setAmount(numericValue);
+    setDisplayAmount(formatCurrency(text));
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setDate(selectedDate);
+    }
+  };
+
+  const formatDateDisplay = (date) => {
+    return date.toISOString().split('T')[0];
+  };
+
   const handleCreate = async () => {
-    if (!name.trim() || !amount.trim() || !date.trim()) {
+    if (!name.trim() || !amount.trim()) {
       Alert.alert('Missing Fields', 'Please fill out all fields to create a goal.');
       return;
     }
@@ -24,9 +50,9 @@ const NewGoalScreen = () => {
       await api.post('/saving/create', {
         goalName: name,
         targetAmount: Number(amount),
-        lockUntil: new Date(date).toISOString()
+        lockUntil: date.toISOString()
       });
-      Alert.alert('Goal Created', `${name} target set for ${amount} RWF by ${date}.`, [
+      Alert.alert('Goal Created', `${name} target set for ${displayAmount} RWF by ${formatDateDisplay(date)}.`, [
         {
           text: 'OK',
           onPress: () => {
@@ -60,18 +86,31 @@ const NewGoalScreen = () => {
           <TextInput
             placeholder="Target Amount (RWF)"
             placeholderTextColor={colors.subtitle}
-            value={amount}
-            onChangeText={setAmount}
+            value={displayAmount}
+            onChangeText={handleAmountChange}
             keyboardType="numeric"
             style={[styles.input, inputStyle]}
           />
-          <TextInput
-            placeholder="Target Date (YYYY-MM-DD)"
-            placeholderTextColor={colors.subtitle}
-            value={date}
-            onChangeText={setDate}
-            style={[styles.input, inputStyle]}
-          />
+          <Pressable onPress={() => setShowDatePicker(true)}>
+            <View pointerEvents="none">
+              <TextInput
+                placeholder="Target Date"
+                placeholderTextColor={colors.subtitle}
+                value={formatDateDisplay(date)}
+                editable={false}
+                style={[styles.input, inputStyle]}
+              />
+            </View>
+          </Pressable>
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              minimumDate={new Date()}
+              onChange={handleDateChange}
+            />
+          )}
         </View>
       </Section>
 
